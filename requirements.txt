@@ -1,8 +1,8 @@
-geemap
-earthengine-api
-osmnx
-geopandas
-rasterio
-shapely
-pandas
-matplotlib
+geemap>=0.20.6
+earthengine-api>=0.1.400
+osmnx>=1.8.0
+geopandas>=0.12.0
+rasterio>=1.3.0
+shapely>=2.0.0
+pandas>=1.5.0
+matplotlib>=3.6.0

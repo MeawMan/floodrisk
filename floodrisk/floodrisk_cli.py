@@ -1,12 +1,13 @@
 import argparse
 from shapely.geometry import Polygon
-from floodrisk import inundation, exportmap, osmdata, damage, exportcsv, visualize
+from floodrisk import initialize, detect_flood, export_map, download_osm_data, compute_flood_damage, export_csv, visualize_map
 
 def main():
-    parser = argparse.ArgumentParser(description="Flood Inundation and Damage Assessment")
-    
-    # Arguments
-    parser.add_argument("--aoi", type=str, help="AOI name for GEE inundation or polygon coordinates", required=True)
+    parser = argparse.ArgumentParser(description="FloodRisk: Flood Detection & Damage Assessment Tool")
+
+    # Main arguments
+    parser.add_argument("--project", type=str, help="Google Cloud Project ID for GEE")
+    parser.add_argument("--aoi", type=str, help="AOI name (ADM2 in Bangladesh) or WKT polygon", required=True)
     parser.add_argument("--before_start", type=str, help="Before flood start date (YYYY-MM-DD)")
     parser.add_argument("--before_end", type=str, help="Before flood end date (YYYY-MM-DD)")
     parser.add_argument("--after_start", type=str, help="After flood start date (YYYY-MM-DD)")
@@ -14,44 +15,46 @@ def main():
     parser.add_argument("--flood_raster", type=str, help="Path to flood raster for damage calculation")
     parser.add_argument("--output", type=str, help="Output folder for reports", default="results")
     parser.add_argument("--visualize", action="store_true", help="Show inundation map")
-    
     args = parser.parse_args()
 
-    # If dates provided, calculate inundation using GEE
+    # Step 1: Initialize GEE
+    if args.project:
+        initialize(args.project)
+
+    # Step 2: Flood detection
     if args.before_start and args.before_end and args.after_start and args.after_end:
         print("📡 Running GEE-based flood detection...")
-        result = inundation(args.aoi, args.before_start, args.before_end, args.after_start, args.after_end)
+        result = detect_flood(args.aoi, args.before_start, args.before_end, args.after_start, args.after_end)
+
         print("\n✅ Inundation Stats:")
         print(f"AOI: {result['AOI']}")
         print(f"Otsu Threshold: {result['Otsu Threshold']}")
         print(f"Total Area (ha): {result['Total Area (ha)'].getInfo()}")
         print(f"Flooded Area (ha): {result['Flooded Area (ha)'].getInfo()}")
         print(f"Inundation %: {result['Inundation %'].getInfo()}")
-        
-        # Export flood map
-        exportmap(result['flooded_image'], f"{args.aoi}_flood_map", args.output, result['aoi'])
 
-    # If raster provided, run damage assessment
+        export_map(result['flooded_image'], f"{args.aoi}_flood_map", args.output, result['aoi'])
+
+    # Step 3: Damage assessment
     if args.flood_raster:
         print("\n📊 Running damage assessment...")
-        
-        # Example AOI polygon for OSM (for CLI simplicity, use a fixed AOI)
-        # TODO: Replace with actual user AOI from shapefile or coordinates if needed
+
+        # For CLI simplicity: sample polygon (future: allow shapefile or coordinates)
         example_polygon = Polygon([(91.15, 23.40), (91.20, 23.40), (91.20, 23.45), (91.15, 23.45)])
-        
-        roads, buildings = osmdata(example_polygon)
-        damage_result = damage(roads, buildings, args.flood_raster)
-        
+
+        roads, buildings = download_osm_data(example_polygon)
+        damage_result = compute_flood_damage(roads, buildings, args.flood_raster)
+
         print("\n✅ Road Damage Summary:")
         print(damage_result['road_stats'])
         print("\n✅ Building Damage Summary:")
         print(damage_result['building_stats'])
-        
-        exportcsv(damage_result['road_stats'], damage_result['building_stats'], args.output)
 
-    # Visualization
+        export_csv(damage_result['road_stats'], damage_result['building_stats'], args.output)
+
+    # Step 4: Visualization
     if args.visualize and args.flood_raster:
-        visualize(args.flood_raster)
+        visualize_map(args.flood_raster)
 
 if __name__ == "__main__":
     main()

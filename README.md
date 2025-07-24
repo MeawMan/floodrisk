@@ -4,29 +4,28 @@
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16407193.svg)](https://doi.org/10.5281/zenodo.16407193)
 
-
 ---
 
 ## 📌 Overview
 
-**FloodRisk** is a Python package designed for **flood detection and damage assessment** using:
+**FloodRisk** is a Python package for **flood detection and damage assessment** using:
 
 * **Sentinel-1 SAR imagery** (via Google Earth Engine)
 * **Otsu thresholding** for flood extent mapping
 * **OpenStreetMap (OSM) data** for infrastructure damage analysis
-* **Export support** for **CSV & GeoTIFF**
+* **CSV & GeoTIFF export**
 * **Visualization** of flood extent and results
 
 ---
 
 ## ✅ Key Features
 
-✔ Flood inundation mapping using Sentinel-1 SAR
+✔ Flood inundation mapping with Sentinel-1 SAR
 ✔ Automatic thresholding using Otsu method
 ✔ Compute inundation percentage and area statistics
-✔ Damage assessment for roads (by category) and buildings using OSM data
+✔ Damage assessment for roads and buildings using OSM data
 ✔ Export results (CSV, GeoTIFF)
-✔ Works with Google Earth Engine for large AOIs
+✔ Visualization of flood maps
 
 ---
 
@@ -48,60 +47,77 @@ pip install -e .
 
 ---
 
-## 🚀 Basic Usage
+## 🚀 Quick Start
 
-### **1. Detect Flood (GEE)**
+### **1. Initialize Google Earth Engine**
 
 ```python
-from floodrisk.inundation import detect_flood
-from floodrisk.exportcsv import export_flood_map
-from floodrisk.gee_auth import initialize
+from floodrisk import initialize
 
 # Authenticate GEE
-initialize(project_id='your-project-id')
-
-# Detect flood
-result = detect_flood(
-    aoi_name='Feni',
-    before_start='2025-01-01', before_end='2025-01-31',
-    after_start='2025-07-01', after_end='2025-07-12'
-)
-
-print("Flooded Area (ha):", result['Flooded Area (ha)'].getInfo())
-
-# Export to Google Drive
-export_flood_map(result['flooded_image'], 'Flood_Extent', 'GEE_Flood')
+initialize(project_id="your-project-id")
 ```
 
 ---
 
-### **2. Damage Assessment**
+### **2. Detect Flood (Sentinel-1 via GEE)**
+
+```python
+from floodrisk import detect_flood, export_map
+
+# Detect flood inundation
+result = detect_flood(
+    aoi_name="Feni",
+    before_start="2025-01-01", before_end="2025-01-31",
+    after_start="2025-07-01", after_end="2025-07-12"
+)
+
+print("Flooded Area (ha):", result['Flooded Area (ha)'].getInfo())
+
+# Export flood map to Google Drive
+export_map(result['flooded_image'], "Flood_Extent", "GEE_Flood")
+```
+
+---
+
+### **3. Damage Assessment**
 
 ```python
 from shapely.geometry import Polygon
-from floodrisk.damage import get_osm_data, compute_flood_damage_fast
+from floodrisk import download_osm_data, compute_flood_damage, export_csv
 
-# AOI polygon (example)
+# Define AOI polygon
 aoi_polygon = Polygon([(91.15, 23.40), (91.20, 23.40), (91.20, 23.45), (91.15, 23.45)])
 
-# Download roads & buildings
-roads, buildings = get_osm_data(aoi_polygon)
+# Download OSM roads & buildings
+roads, buildings = download_osm_data(aoi_polygon)
 
-# Flood raster path (GeoTIFF exported from GEE)
+# Flood raster (GeoTIFF from GEE export)
 flood_tif_path = "Flood_Extent.tif"
 
-# Compute damage
-result = compute_flood_damage_fast(roads, buildings, flood_tif_path)
+# Compute flood damage
+damage_result = compute_flood_damage(roads, buildings, flood_tif_path)
 
-print(result['road_stats'])
-print(result['building_stats'])
+print(damage_result['road_stats'])
+print(damage_result['building_stats'])
+
+# Export results as CSV
+export_csv(damage_result['road_stats'], damage_result['building_stats'], "output/reports")
+```
+
+---
+
+### **4. Visualization**
+
+```python
+from floodrisk import visualize_map
+
+visualize_map("Flood_Extent.tif", aoi_shapefile="aoi.shp")
 ```
 
 ---
 
 ## ✅ Output Example
-
-**Flood Stats:**
 
 ```
 AOI: Feni
@@ -110,8 +126,6 @@ Total Area: 88,029 ha
 Flooded Area: 18,647 ha
 Inundation: 21%
 ```
-
-**Damage Summary:**
 
 ```
 Road Damage Summary:
@@ -126,9 +140,17 @@ Building Damage Summary:
 
 ---
 
-## 📜 Citation
+## ✅ CLI Usage
 
-If you use **FloodRisk** in your research, please cite:
+Run from terminal:
+
+```bash
+floodrisk --aoi Feni --before_start 2025-01-01 --before_end 2025-01-31 --after_start 2025-07-01 --after_end 2025-07-12 --flood_raster Flood_Extent.tif --output results --visualize
+```
+
+---
+
+## 📜 Citation
 
 ```
 Rahman, M.R. (2025). FloodRisk: A Python Package for Flood Detection and Damage Assessment.
@@ -137,14 +159,6 @@ Zenodo. https://doi.org/10.5281/zenodo.16407193
 
 ---
 
-## 🔗 Links
-
-* **PyPI**: [FloodRisk](https://pypi.org/project/floodrisk/)
-* **GitHub**: [Repository](https://github.com/MeawMan/floodrisk)
-* **Zenodo DOI**: [10.5281/zenodo.16407193](https://doi.org/10.5281/zenodo.16407193)
-
----
-
 ## ✅ License
 
-MIT License. See [LICENSE](LICENSE).
+## MIT License. See [LICENSE](LICENSE).

@@ -1,19 +1,45 @@
-# Python
+# Python cache and build artifacts
 __pycache__/
 *.py[cod]
+*.pyo
 *.egg-info/
 dist/
 build/
+.eggs/
 
-# Virtual Environment
+# Virtual environments
 venv/
 .env/
+env/
+*.venv/
 
-# Jupyter Notebook
-.ipynb_checkpoints
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
 
-# OS
-.DS_Store
+# Logs and temporary files
+*.log
+*.tmp
+*.bak
 
-# PyCharm
+# IDE and editor settings
 .idea/
+.vscode/
+*.swp
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Test coverage and reports
+.coverage
+htmlcov/
+.cache/
+
+# Package publishing artifacts
+*.tar.gz
+*.whl
+
+# Local data or exports
+output/
+results/
+tests/Flood_Extent.tif
