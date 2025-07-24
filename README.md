@@ -1,60 +1,60 @@
-# **FloodRisk**
+# 🌊 FloodRisk
 
-*Flood detection and damage assessment using Sentinel-1 SAR and OpenStreetMap (OSM) data.*
-
-[![PyPI version](https://img.shields.io/pypi/v/floodrisk.svg)](https://pypi.org/project/floodrisk/)
+[![PyPI version](https://badge.fury.io/py/floodrisk.svg)](https://pypi.org/project/floodrisk/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![DOI](https://zenodo.org/badge/DOI/10.xxxx/zenodo.xxxxx.svg)](https://doi.org/10.xxxx/zenodo.xxxxx)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16407193.svg)](https://doi.org/10.5281/zenodo.16407193)
 
 ---
 
-## **Overview**
+## 📌 Overview
 
-`floodrisk` is a Python package designed for:
+**FloodRisk** is a Python package designed for **flood detection and damage assessment** using:
 
-* **Flood inundation mapping** using Sentinel-1 SAR imagery
-* **Otsu threshold-based detection**
-* **Damage assessment** for roads and buildings using OSM data
-* **Export of results** (CSV, GeoTIFF)
-* **Supports GEE integration for large-scale flood detection**
+* **Sentinel-1 SAR imagery** (via Google Earth Engine)
+* **Otsu thresholding** for flood extent mapping
+* **OpenStreetMap (OSM) data** for infrastructure damage analysis
+* **Export support** for **CSV & GeoTIFF**
+* **Visualization** of flood extent and results
 
 ---
 
-## **Key Features**
+## ✅ Key Features
 
-✔ Detect flood extent using **Sentinel-1 SAR**
-✔ Automatic thresholding using **Otsu method**
+✔ Flood inundation mapping using Sentinel-1 SAR
+✔ Automatic thresholding using Otsu method
 ✔ Compute inundation percentage and area statistics
-✔ Assess damage to **roads (by category)** and **buildings** using OSM data
-✔ Export results in CSV and raster format
-✔ Works with **Google Earth Engine** for large-scale AOIs
+✔ Damage assessment for roads (by category) and buildings using OSM data
+✔ Export results (CSV, GeoTIFF)
+✔ Works with Google Earth Engine for large AOIs
 
 ---
 
-## **Installation**
+## 🔍 Installation
+
+Install from **PyPI**:
 
 ```bash
 pip install floodrisk
 ```
 
-### **From source**
+From **source**:
 
 ```bash
-git clone https://github.com/your-username/floodrisk.git
+git clone https://github.com/MeawMan/floodrisk.git
 cd floodrisk
 pip install -e .
 ```
 
 ---
 
-## **Basic Usage**
+## 🚀 Basic Usage
 
 ### **1. Detect Flood (GEE)**
 
 ```python
 from floodrisk.inundation import detect_flood
 from floodrisk.exportcsv import export_flood_map
-from floodrisk.geeauth import initialize
+from floodrisk.gee_auth import initialize
 
 # Authenticate GEE
 initialize(project_id='your-project-id')
@@ -98,9 +98,9 @@ print(result['building_stats'])
 
 ---
 
-## **Output Example**
+## ✅ Output Example
 
-✔ **Flood Stats:**
+**Flood Stats:**
 
 ```
 AOI: Feni
@@ -110,7 +110,7 @@ Flooded Area: 18,647 ha
 Inundation: 21%
 ```
 
-✔ **Damage Summary:**
+**Damage Summary:**
 
 ```
 Road Damage Summary:
@@ -125,17 +125,25 @@ Building Damage Summary:
 
 ---
 
-## **Citation**
+## 📜 Citation
 
-If you use this package in your research, please cite:
+If you use **FloodRisk** in your research, please cite:
 
 ```
 Rahman, M.R. (2025). FloodRisk: A Python Package for Flood Detection and Damage Assessment.
-Zenodo. DOI: https://doi.org/10.xxxx/zenodo.xxxxx
+Zenodo. https://doi.org/10.5281/zenodo.16407193
 ```
 
 ---
 
-## **License**
+## 🔗 Links
 
-[MIT License](LICENSE)
+* **PyPI**: [FloodRisk](https://pypi.org/project/floodrisk/)
+* **GitHub**: [Repository](https://github.com/MeawMan/floodrisk)
+* **Zenodo DOI**: [10.5281/zenodo.16407193](https://doi.org/10.5281/zenodo.16407193)
+
+---
+
+## ✅ License
+
+MIT License. See [LICENSE](LICENSE).
