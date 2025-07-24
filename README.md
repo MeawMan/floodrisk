@@ -1,8 +1,9 @@
 # 🌊 FloodRisk
 
-[![PyPI version](https://badge.fury.io/py/floodrisk.svg)](https://pypi.org/project/floodrisk/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![PyPI](https://img.shields.io/pypi/v/floodrisk)](https://pypi.org/project/floodrisk/)
+![License](https://img.shields.io/badge/License-MIT-green.svg)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16407193.svg)](https://doi.org/10.5281/zenodo.16407193)
+
 
 ---
 
